@@ -1,0 +1,14 @@
+{
+    "KPackageStructure": "Plasma/Applet",
+    "KPlugin": {
+        "Authors": [{"Name": "Dragomir Yordanov"}],
+        "Category": "Windows and Tasks",
+        "Description": "Tint2-style task manager: one block per virtual desktop, pinned launchers, grouping and drag and drop",
+        "Icon": "preferences-system-windows",
+        "Id": "com.drvy.tintish2taskbar",
+        "License": "GPL-2.0-or-later",
+        "Name": "Tintish2 Taskbar",
+        "Version": "1.0"
+    },
+    "X-Plasma-API-Minimum-Version": "6.0"
+}

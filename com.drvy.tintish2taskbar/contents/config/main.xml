@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<kcfg xmlns="http://www.kde.org/standards/kcfg/1.0"
+      xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://www.kde.org/standards/kcfg/1.0 http://www.kde.org/standards/kcfg/1.0/kcfg.xsd">
+  <group name="General">
+    <!-- Layout -->
+    <entry name="layoutMode" type="Int"><default>0</default></entry>
+    <entry name="widthMode" type="Int"><default>0</default></entry>
+    <entry name="maxWidth" type="Int"><default>1200</default></entry>
+    <entry name="maxWidthUnit" type="Int"><default>0</default></entry>
+    <entry name="maxPercent" type="Int"><default>80</default></entry>
+    <entry name="showDesktopNames" type="Bool"><default>true</default></entry>
+    <entry name="equalBlocks" type="Bool"><default>true</default></entry>
+    <entry name="hideEmptyDesktops" type="Bool"><default>false</default></entry>
+    <entry name="showLabels" type="Bool"><default>false</default></entry>
+    <entry name="labelWidth" type="Int"><default>150</default></entry>
+    <entry name="iconSize" type="Int"><default>0</default></entry>
+    <!-- Filters -->
+    <entry name="showOnlyCurrentScreen" type="Bool"><default>false</default></entry>
+    <entry name="showOnlyCurrentActivity" type="Bool"><default>false</default></entry>
+    <entry name="showOnlyMinimized" type="Bool"><default>false</default></entry>
+    <!-- Launchers -->
+    <entry name="launchers" type="StringList"><default></default></entry>
+    <entry name="showLaunchers" type="Bool"><default>true</default></entry>
+    <entry name="launchersAtEnd" type="Bool"><default>false</default></entry>
+    <!-- Behaviour -->
+    <entry name="groupingStrategy" type="Int"><default>1</default></entry>
+    <entry name="groupClickAction" type="Int"><default>0</default></entry>
+    <entry name="sortingStrategy" type="Int"><default>1</default></entry>
+    <entry name="minimizeActiveOnClick" type="Bool"><default>true</default></entry>
+    <entry name="middleClickAction" type="Int"><default>1</default></entry>
+    <entry name="wheelAction" type="Int"><default>0</default></entry>
+    <entry name="showToolTips" type="Bool"><default>true</default></entry>
+    <entry name="desktopMenuService" type="String"><default></default></entry>
+    <!-- Appearance -->
+    <entry name="styleSource" type="Int"><default>0</default></entry>
+    <entry name="dimInactive" type="Bool"><default>true</default></entry>
+    <entry name="highlightStyle" type="Int"><default>0</default></entry>
+    <entry name="cornerRadius" type="Int"><default>2</default></entry>
+    <entry name="spacing" type="Int"><default>4</default></entry>
+    <entry name="showDividers" type="Bool"><default>true</default></entry>
+    <entry name="colorBlock" type="Color"><default>0,0,0,0</default></entry>
+    <entry name="colorBlockActive" type="Color"><default>216,216,216,36</default></entry>
+    <entry name="colorTaskHover" type="Color"><default>216,216,216,31</default></entry>
+    <entry name="colorTaskActive" type="Color"><default>216,216,216,77</default></entry>
+    <entry name="colorTaskAttention" type="Color"><default>237,35,35,60</default></entry>
+    <entry name="colorLabel" type="Color"><default>130,130,130,255</default></entry>
+    <entry name="colorLabelActive" type="Color"><default>216,216,216,255</default></entry>
+  </group>
+</kcfg>
