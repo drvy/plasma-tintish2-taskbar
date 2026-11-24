@@ -33,13 +33,20 @@ Item {
     visible: launchers ? (cfg.showLaunchers && count > 0)
                        : (!cfg.hideEmptyDesktops || count > 0 || current)
 
-    Layout.fillHeight: true
+    readonly property bool vertical: bar.vertical
     // Limited width: blocks grow in proportion to their content to fill it
     readonly property bool stretch: !launchers && (cfg.equalBlocks || (cfg.widthMode === 1 && bar.limited))
-    Layout.fillWidth: stretch
-    Layout.horizontalStretchFactor: cfg.equalBlocks ? 1 : Math.max(1, Math.round(row.implicitWidth))
-    Layout.minimumWidth: row.implicitWidth + 2 * margin
-    Layout.preferredWidth: row.implicitWidth + 2 * margin
+    readonly property real extent: (vertical ? row.implicitHeight : row.implicitWidth) + 2 * margin
+    readonly property real weight: cfg.equalBlocks ? 1 : Math.max(1, Math.round(vertical ? row.implicitHeight : row.implicitWidth))
+
+    Layout.fillHeight: vertical ? stretch : true
+    Layout.fillWidth: vertical ? true : stretch
+    Layout.horizontalStretchFactor: weight
+    Layout.verticalStretchFactor: weight
+    Layout.minimumWidth: vertical ? 0 : extent
+    Layout.preferredWidth: vertical ? -1 : extent
+    Layout.minimumHeight: vertical ? extent : 0
+    Layout.preferredHeight: vertical ? extent : -1
 
     Instantiator {
         id: windows
@@ -71,34 +78,44 @@ Item {
         visible: block.cfg.showDividers && ((!block.launchers && block.scope === 0 && block.position > 0)
                                             || (block.launchers && !block.cfg.launchersAtEnd))
         anchors {
-            top: parent.top
-            bottom: parent.bottom
-            topMargin: 5
-            bottomMargin: 5
-            left: block.launchers ? undefined : parent.left
-            right: block.launchers ? parent.right : undefined
+            top: block.vertical ? (block.launchers ? undefined : parent.top) : parent.top
+            bottom: block.vertical ? (block.launchers ? parent.bottom : undefined) : parent.bottom
+            left: block.vertical ? parent.left : (block.launchers ? undefined : parent.left)
+            right: block.vertical ? parent.right : (block.launchers ? parent.right : undefined)
+            topMargin: block.vertical ? 0 : 5
+            bottomMargin: block.vertical ? 0 : 5
+            leftMargin: block.vertical ? 5 : 0
+            rightMargin: block.vertical ? 5 : 0
         }
+        // The anchored axis stretches; the other one is the line thickness
         width: 1
+        height: 1
         color: Kirigami.Theme.textColor
         opacity: 0.12
     }
 
-    RowLayout {
+    GridLayout {
         id: row
         anchors {
             fill: parent
-            leftMargin: block.margin
-            rightMargin: block.margin
+            leftMargin: block.vertical ? 0 : block.margin
+            rightMargin: block.vertical ? 0 : block.margin
+            topMargin: block.vertical ? block.margin : 0
+            bottomMargin: block.vertical ? block.margin : 0
         }
-        spacing: Kirigami.Units.largeSpacing
+        flow: block.vertical ? GridLayout.LeftToRight : GridLayout.TopToBottom
+        columns: block.vertical ? 1 : -1
+        rows: block.vertical ? -1 : 1
+        rowSpacing: Kirigami.Units.smallSpacing
+        columnSpacing: Kirigami.Units.largeSpacing
 
         Text {
             visible: !block.launchers && block.scope === 0 && block.cfg.showDesktopNames
-            Layout.alignment: Qt.AlignVCenter
+            Layout.alignment: block.vertical ? Qt.AlignHCenter : Qt.AlignVCenter
             text: block.desktopName
             elide: Text.ElideRight
-            Layout.maximumWidth: Kirigami.Units.gridUnit * 8
-            Layout.rightMargin: Kirigami.Units.smallSpacing
+            Layout.maximumWidth: block.vertical ? row.width : Kirigami.Units.gridUnit * 8
+            Layout.rightMargin: block.vertical ? 0 : Kirigami.Units.smallSpacing
             font.family: "Liberation Sans"
             font.pixelSize: 12
             color: block.cfg.styleSource === 0
@@ -106,11 +123,15 @@ Item {
                  : (block.current ? block.cfg.colorLabelActive : block.cfg.colorLabel)
         }
 
-        RowLayout {
+        GridLayout {
             id: tasksRow
             Layout.fillHeight: true
             Layout.fillWidth: true
-            spacing: block.cfg.spacing
+            flow: block.vertical ? GridLayout.LeftToRight : GridLayout.TopToBottom
+            columns: block.vertical ? 1 : -1
+            rows: block.vertical ? -1 : 1
+            rowSpacing: block.cfg.spacing
+            columnSpacing: block.cfg.spacing
 
             Repeater {
                 model: block.tasksModel
@@ -122,7 +143,8 @@ Item {
             }
 
             Item {
-                Layout.fillWidth: true
+                Layout.fillWidth: !block.vertical
+                Layout.fillHeight: block.vertical
             }
         }
     }
