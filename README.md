@@ -29,7 +29,7 @@ The stock task manager mixes the windows of every desktop into one list, and a p
 
 ## Requirements
 
-Plasma 6 and a horizontal panel. Vertical panels are not supported.
+Plasma 6, in a horizontal or vertical panel.
 
 The jump-list actions use `org.kde.plasma.private.kicker`, a private Plasma API that can change between releases.
 

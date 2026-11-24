@@ -35,7 +35,8 @@ PlasmaCore.ToolTipArea {
         if (cfg.iconSize > 0) {
             return cfg.iconSize;
         }
-        const room = height - 2 * pad;
+        // Vertical panels: the button is as wide as the panel; with titles the icon stays at a normal size
+        const room = (bar.vertical ? (showLabel ? 24 + 2 * pad : width) : height) - 2 * pad;
         return [16, 22, 24, 32, 48, 64].reduce((best, s) => Math.abs(s - room) < Math.abs(best - room) ? s : best, 16);
     }
     readonly property bool showLabel: inPopup || (cfg.showLabels && !isLauncher)
@@ -52,13 +53,17 @@ PlasmaCore.ToolTipArea {
     readonly property bool pending: model.IsStartup
         || (model.IsWindow && !model.IsOnAllVirtualDesktops && (model.VirtualDesktops ?? []).length === 0)
 
-    visible: !(pending && !isLauncher && blockDesktop !== "" && bar.homeOf(appKey) !== blockDesktop)
+    visible: !model.SkipTaskbar && !(pending && !isLauncher && blockDesktop !== "" && bar.homeOf(appKey) !== blockDesktop)
 
-    Layout.fillHeight: !inPopup
-    Layout.fillWidth: showLabel
+    readonly property bool vertical: bar.vertical && !inPopup
+    Layout.fillHeight: !inPopup && !vertical
+    Layout.fillWidth: showLabel || vertical
     Layout.minimumWidth: iconPx + 2 * pad
-    Layout.preferredWidth: showLabel ? cfg.labelWidth : iconPx + 2 * pad
-    Layout.maximumWidth: showLabel ? cfg.labelWidth : iconPx + 2 * pad
+    Layout.preferredWidth: showLabel && !vertical ? cfg.labelWidth : iconPx + 2 * pad
+    Layout.maximumWidth: vertical ? Number.POSITIVE_INFINITY : (showLabel ? cfg.labelWidth : iconPx + 2 * pad)
+    Layout.minimumHeight: vertical ? iconPx + 2 * pad : 0
+    Layout.preferredHeight: vertical ? iconPx + 2 * pad : -1
+    Layout.maximumHeight: vertical ? iconPx + 2 * pad : Number.POSITIVE_INFINITY
 
     mainText: model.display
     subText: isGroup ? i18n("%1 windows", model.ChildCount) : model.GenericName
@@ -73,6 +78,9 @@ PlasmaCore.ToolTipArea {
     TaskFrame {
         anchors.fill: parent
         anchors.margins: 1
+        active: task.isActive
+        running: !task.isLauncher
+        minimized: !!task.model.IsMinimized
         kind: {
             if (task.isLauncher) return task.containsMouse || task.menuOpen ? "hover" : "normal";
             if (task.model.IsDemandingAttention) return "attention";

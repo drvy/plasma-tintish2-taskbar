@@ -423,8 +423,25 @@ PlasmoidItem {
         return [{ id: "", name: "" }];
     }
 
-    fullRepresentation: RowLayout {
-        spacing: 0
+    Component {
+        id: blockComponent
+        Block {
+            required property var modelData
+            required property int index
+            position: index
+            bar: root
+            desktopId: modelData.id
+            desktopName: modelData.name
+            scope: root.cfg.layoutMode
+        }
+    }
+
+    fullRepresentation: GridLayout {
+        flow: root.vertical ? GridLayout.LeftToRight : GridLayout.TopToBottom
+        columns: root.vertical ? 1 : -1
+        rows: root.vertical ? -1 : 1
+        rowSpacing: 0
+        columnSpacing: 0
 
         Block {
             bar: root
@@ -432,28 +449,40 @@ PlasmoidItem {
             visible: !root.cfg.launchersAtEnd && root.cfg.showLaunchers && count > 0
         }
 
+        // RowLayout and ColumnLayout (not GridLayout) because only they have uniformCellSizes
         RowLayout {
+            visible: !root.vertical
             Layout.fillWidth: true
             Layout.fillHeight: true
             spacing: 0
             uniformCellSizes: root.cfg.equalBlocks && root.cfg.layoutMode === 0
 
             Repeater {
-                model: root.blocks
-                delegate: Block {
-                    required property var modelData
-                    required property int index
-                    position: index
-                    bar: root
-                    desktopId: modelData.id
-                    desktopName: modelData.name
-                    scope: root.cfg.layoutMode
-                }
+                model: root.vertical ? [] : root.blocks
+                delegate: blockComponent
             }
 
             Item {
                 visible: !parent.uniformCellSizes && !root.limited
                 Layout.fillWidth: true
+            }
+        }
+
+        ColumnLayout {
+            visible: root.vertical
+            Layout.fillWidth: true
+            Layout.fillHeight: true
+            spacing: 0
+            uniformCellSizes: root.cfg.equalBlocks && root.cfg.layoutMode === 0
+
+            Repeater {
+                model: root.vertical ? root.blocks : []
+                delegate: blockComponent
+            }
+
+            Item {
+                visible: !parent.uniformCellSizes
+                Layout.fillHeight: true
             }
         }
 
