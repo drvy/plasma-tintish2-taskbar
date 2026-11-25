@@ -53,7 +53,13 @@ PlasmaCore.ToolTipArea {
     readonly property bool pending: model.IsStartup
         || (model.IsWindow && !model.IsOnAllVirtualDesktops && (model.VirtualDesktops ?? []).length === 0)
 
-    visible: !model.SkipTaskbar && !(pending && !isLauncher && blockDesktop !== "" && bar.homeOf(appKey) !== blockDesktop)
+    // The model lets windows demanding attention through its desktop filter (and it cannot be switched off
+    // from QML), so a window that lives on another desktop is dropped here
+    readonly property bool foreign: blockDesktop !== "" && !isLauncher
+        && !model.IsOnAllVirtualDesktops && (model.VirtualDesktops ?? []).length > 0
+        && model.VirtualDesktops.indexOf(blockDesktop) < 0
+
+    visible: !model.SkipTaskbar && !foreign && !(pending && !isLauncher && blockDesktop !== "" && bar.homeOf(appKey) !== blockDesktop)
 
     readonly property bool vertical: bar.vertical && !inPopup
     Layout.fillHeight: !inPopup && !vertical
